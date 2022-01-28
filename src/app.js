@@ -20,6 +20,6 @@ connectDb()
     gracefulShutdown(server)
   })
   .catch(e => {
-    logger.error('Failed to connect to MongoDB')
+    logger.error(`Failed to connect to MongoDB ${process.env.DATABASE_URL}`)
     process.exit()
   })
