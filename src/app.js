@@ -1,5 +1,6 @@
 require('dotenv').config()
 
+const gracefulShutdown = require('http-graceful-shutdown')
 const express = require('express')
 const app = express()
 
@@ -12,9 +13,10 @@ app.use('/', require('./routes/health'))
 connectDb()
   .then(async () => {
     console.log('Connected to MongoDB...')
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       console.log(`Server listening on ${PORT}`)
     })
+    gracefulShutdown(server)
   })
   .catch(e => {
     console.error('Failed to connect to MongoDB')
