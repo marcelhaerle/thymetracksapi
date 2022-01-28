@@ -2,6 +2,7 @@ require('dotenv').config()
 
 const logger = require('./logger')
 const gracefulShutdown = require('http-graceful-shutdown')
+const bodyParser = require('body-parser')
 const express = require('express')
 const app = express()
 
@@ -9,7 +10,9 @@ const { connectDb } = require('./models')
 
 const PORT = process.env.PORT || 4040
 
+app.use(bodyParser.json())
 app.use('/', require('./routes/health'))
+app.use('/api', require('./routes/register'))
 
 connectDb()
   .then(async () => {
