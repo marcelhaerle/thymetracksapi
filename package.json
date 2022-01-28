@@ -1,0 +1,11 @@
+{
+  "name": "thymetracksapi",
+  "version": "0.0.1",
+  "description": "Thymetracks REST API",
+  "private": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Marcel Härle <marcel.haerle@sonnvest.de>",
+  "license": "MIT"
+}
