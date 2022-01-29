@@ -9,8 +9,8 @@
   "scripts": {
     "test": "mocha tests/**/*.spec.js",
     "lint": "eslint src",
-    "dev": "nodemon src/app.js",
-    "start": "node src/app.js"
+    "dev": "nodemon bin/www",
+    "start": "node bin/www"
   },
   "author": "Marcel Härle <marcel.haerle@sonnvest.de>",
   "license": "MIT",

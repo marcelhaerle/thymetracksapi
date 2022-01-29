@@ -1,0 +1,20 @@
+#!/usr/bin/env node
+const mongoose = require('mongoose')
+const app = require('../src/app')
+const logger = require('../src/logger')
+const gracefulShutdown = require('http-graceful-shutdown')
+
+const PORT = process.env.PORT || 4040
+
+mongoose.connect(process.env.DATABASE_URL)
+  .then(async () => {
+    logger.info('Connected to MongoDB...')
+    const server = app.listen(PORT, () => {
+      logger.info(`Server listening on ${PORT}`)
+    })
+    gracefulShutdown(server)
+  })
+  .catch(e => {
+    logger.error(`Failed to connect to MongoDB ${process.env.DATABASE_URL}`)
+    process.exit()
+  })
