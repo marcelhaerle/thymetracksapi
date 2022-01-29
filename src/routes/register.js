@@ -6,7 +6,7 @@ const { check, validationResult } = require('express-validator')
 const UserService = require('../service/user-service')
 
 router.post(
-  '/register',
+  '/',
   // Data validation
   check('email').isEmail().withMessage('Must be a valid email address'),
   check('email').custom(email => {
@@ -34,7 +34,7 @@ router.post(
 
     UserService.registerUser(req.body)
       .then(newUser => {
-        logger.info(`Registered new user ${newUser}`)
+        logger.debug(`Registered new user ${newUser}`)
         res.status(201).end()
       })
       .catch(e => {

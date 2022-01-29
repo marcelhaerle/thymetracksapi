@@ -17,16 +17,6 @@ const userSchema = new mongoose.Schema({
   }
 })
 
-userSchema.static.findByLogin = async (login) => {
-  let user = await this.findOne({ email: login })
-
-  if (!user) {
-    user = await this.findOne({ nickname: login })
-  }
-
-  return user
-}
-
 const User = mongoose.model('User', userSchema)
 
 module.exports = User

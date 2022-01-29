@@ -1,6 +1,16 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
+exports.findByLogin = async (login) => {
+  let user = await User.findOne({ email: login })
+
+  if (!user) {
+    user = await User.findOne({ nickname: login })
+  }
+
+  return user
+}
+
 exports.findUserByEmail = async (email) => {
   return User.findOne({ email: email })
 }
