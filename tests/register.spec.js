@@ -1,73 +1,81 @@
-const chai = require('chai')
-const expect = chai.expect
-const chaiHttp = require('chai-http')
-
+const mongoose = require('mongoose')
+const { setupDb } = require('./setup')
 const app = require('../src/app')
+const request = require('supertest')
+
 const User = require('../src/models/user')
 
-const mongoose = require('mongoose')
-const { MongoMemoryServer } = require('mongodb-memory-server')
-
-chai.use(chaiHttp)
-
-let mongoServer
-
-before(async () => {
-  mongoServer = await MongoMemoryServer.create()
-  const uri = mongoServer.getUri()
-  await mongoose.connect(uri)
-})
-
-after(async () => {
-  await mongoose.disconnect()
-  await mongoServer.stop()
-})
-
 describe('Register new user', () => {
+  beforeAll(async () => {
+    await mongoose.connect(global.__MONGO_URI__)
+  })
+
+  afterAll(async () => {
+    await mongoose.disconnect()
+  })
+
+  beforeEach(async () => {
+    await setupDb()
+  })
+
   describe('POST /api/register', () => {
-    it('should create a new user', async () => {
-      const res = await chai.request(app)
+    test('it should create a new user', async () => {
+      const res = await request(app)
         .post('/api/register')
         .send({ email: 'max@mustermann.de', nickname: 'maxi', password: '12345678' })
-      expect(res).to.have.status(201)
+      expect(res.statusCode).toBe(201)
       const createdUser = await User.findOne({ email: 'max@mustermann.de' }).exec()
-      expect(createdUser).to.have.property('email', 'max@mustermann.de')
-      expect(createdUser).to.have.property('nickname', 'maxi')
+      expect(createdUser.email).toBe('max@mustermann.de')
+      expect(createdUser.nickname).toBe('maxi')
     })
 
-    it('should fail when email is missing', async () => {
-      const res = await chai.request(app)
+    test('it should fail when email already in use', async () => {
+      const res = await request(app)
+        .post('/api/register')
+        .send({ email: 'john@gmail.com', nickname: 'jonnyy', passwordHash: '1234567890' })
+      expect(res.statusCode).toBe(400)
+    })
+
+    test('it should fail when nickname already in use', async () => {
+      const res = await request(app)
+        .post('/api/register')
+        .send({ email: 'john2@gmail.com', nickname: 'johnG', passwordHash: '1234567890' })
+      expect(res.statusCode).toBe(400)
+    })
+
+    test('it should fail when email is missing', async () => {
+      const res = await request(app)
         .post('/api/register')
         .send({ nickname: 'maxi', password: '12345678' })
-      expect(res).to.have.status(400)
+      expect(res.statusCode).toBe(400)
     })
 
-    it('should fail when nickname is missing', async () => {
-      const res = await chai.request(app)
+    test('it should fail when nickname is missing', async () => {
+      const res = await request(app)
         .post('/api/register')
         .send({ email: 'max@mustermann.de', password: '12345678' })
-      expect(res).to.have.status(400)
+      expect(res.statusCode).toBe(400)
     })
 
-    it('should fail when password is missing', async () => {
-      const res = await chai.request(app)
+    test('it should fail when password is missing', async () => {
+      const res = await request(app)
         .post('/api/register')
         .send({ email: 'max@mustermann.de', nickname: 'maxi' })
-      expect(res).to.have.status(400)
+      expect(res.statusCode).toBe(400)
     })
 
-    it('should fail when password too short', async () => {
-      const res = await chai.request(app)
+    test('it should fail when password too short', async () => {
+      const res = await request(app)
         .post('/api/register')
         .send({ email: 'max@mustermann.de', nickname: 'maxi', password: '1234' })
-      expect(res).to.have.status(400)
+      expect(res.statusCode).toBe(400)
     })
 
-    it('should fail when email is not valid', async () => {
-      const res = await chai.request(app)
+    test('it should fail when email is not valid', async () => {
+      const res = await request(app)
         .post('/api/register')
         .send({ email: 'mustermann.de', nickname: 'maxi', password: '123477887' })
-      expect(res).to.have.status(400)
+      expect(res.statusCode).toBe(400)
     })
   })
 })

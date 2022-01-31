@@ -7,7 +7,7 @@
     "node": "16.13.x"
   },
   "scripts": {
-    "test": "mocha tests/**/*.spec.js",
+    "test": "jest",
     "lint": "eslint src",
     "dev": "nodemon bin/www",
     "start": "node bin/www"
@@ -26,15 +26,16 @@
     "winston": "^3.5.0"
   },
   "devDependencies": {
-    "chai": "^4.3.6",
-    "chai-http": "^4.3.0",
+    "@shelf/jest-mongodb": "^2.2.0",
     "eslint": "^7.32.0",
     "eslint-config-standard": "^16.0.3",
     "eslint-plugin-import": "^2.25.4",
+    "eslint-plugin-jest": "^26.0.0",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^5.2.0",
-    "mocha": "^9.2.0",
-    "mongodb-memory-server": "^8.2.0",
-    "nodemon": "^2.0.15"
+    "jest": "^27.4.7",
+    "nodemon": "^2.0.15",
+    "superagent": "^7.1.1",
+    "supertest": "^6.2.2"
   }
 }
