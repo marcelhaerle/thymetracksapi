@@ -2,10 +2,13 @@ require('dotenv').config()
 
 const security = require('./security')
 const bodyParser = require('body-parser')
+const logger = require('./logger')
+const morgan = require('morgan')
 const express = require('express')
 const app = express()
 
 app.use(bodyParser.json())
+app.use(morgan('tiny', { stream: logger.stream }))
 
 app.get('/', (req, res) => {
   res.status(200).end()
