@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Thymetracks REST API",
   "private": true,
-  "main": "src/app.js",
+  "main": "bin/www",
   "engines": {
     "node": "16.13.x"
   },
